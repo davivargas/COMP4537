@@ -3,27 +3,20 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
+import { Widget } from "./Widget.js";
+
 // One button in the app. Every button on every page is an instance of this class,
 // so no page ever builds a <button> element by hand.
-export class AppButton {
+export class AppButton extends Widget {
     constructor(label, className) {
-        this.element = document.createElement("button");
+        super("button", className);
         this.element.type = "button";
-        this.element.className = className;
         this.element.textContent = label;
     }
 
     // Runs handler whenever this button is clicked
     onClick(handler) {
         this.element.addEventListener("click", handler);
-    }
-
-    mount(parent) {
-        parent.appendChild(this.element);
         return this;
-    }
-
-    remove() {
-        this.element.remove();
     }
 }

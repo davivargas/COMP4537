@@ -3,29 +3,38 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
-// The only class that touches localStorage. It turns the array of notes into a JSON
-// string on the way in and back into objects on the way out, so the writer page and
+import { NoteData } from "./NoteData.js";
+
+// The only class that touches localStorage. It turns the notes into a JSON string on
+// the way in and back into NoteData objects on the way out, so the writer page and
 // the reader page can never disagree about the stored format.
 export class NoteStore {
     static KEY = "comp4537_lab2_notes";
 
-    // Serializes an array of plain objects, e.g. [{ id: 1, text: "milk" }]
+    // Takes NoteData objects; JSON.stringify calls toJSON() on each one of them
     save(notes) {
         localStorage.setItem(NoteStore.KEY, JSON.stringify(notes));
     }
 
-    // Always returns an array, even if nothing has been stored yet
+    // Always returns an array of NoteData, even if nothing has been stored yet or
+    // what is there is not what we wrote
     load() {
         const raw = localStorage.getItem(NoteStore.KEY);
         if (raw === null) {
             return [];
         }
+        let parsed;
         try {
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
+            parsed = JSON.parse(raw);
         } catch (error) {
             return [];
         }
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
+        return parsed
+            .map((item) => NoteData.fromJSON(item))
+            .filter((note) => note !== null);
     }
 
     // The storage event fires in every OTHER tab of this browser when our key changes.

@@ -3,19 +3,15 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
+import { Widget } from "./Widget.js";
+
 // The small line of text in the top right corner that reports the most recent
 // time the notes were stored (writer) or retrieved (reader).
-export class StatusLabel {
+export class StatusLabel extends Widget {
     static CLASS_NAME = "status";
 
     constructor() {
-        this.element = document.createElement("div");
-        this.element.className = StatusLabel.CLASS_NAME;
-    }
-
-    mount(parent) {
-        parent.appendChild(this.element);
-        return this;
+        super("div", StatusLabel.CLASS_NAME);
     }
 
     // Stamps the current time after the given message, e.g. "Stored at 2:31:07 PM"

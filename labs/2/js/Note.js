@@ -3,54 +3,43 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
+import { Widget } from "./Widget.js";
 import { AppButton } from "./AppButton.js";
 import { MESSAGES } from "../lang/messages/en/user.js";
 
-// One editable note on the writer page. Each Note owns its own textarea and its own
-// remove button, and knows how to hand back its data and how to take itself out of
-// the page. Nothing outside this class reaches into those elements.
-export class Note {
+// The editable view of one NoteData: a textarea to change its text and a button to
+// remove it. The NoteData behind it is kept up to date on every keystroke, so the
+// writer page can hand the models straight to the store without converting anything.
+// Nothing outside this class reaches into the textarea.
+export class Note extends Widget {
     static ROW_CLASS = "note-row";
     static TEXT_CLASS = "note-text";
     static REMOVE_CLASS = "remove-button";
 
-    constructor(id, text) {
-        this.id = id;
-
-        this.element = document.createElement("div");
-        this.element.className = Note.ROW_CLASS;
+    constructor(data) {
+        super("div", Note.ROW_CLASS);
+        this.data = data;
 
         this.textarea = document.createElement("textarea");
         this.textarea.className = Note.TEXT_CLASS;
-        this.textarea.value = text;
+        this.textarea.value = data.text;
         this.element.appendChild(this.textarea);
 
         this.removeButton = new AppButton(MESSAGES.REMOVE_BUTTON, Note.REMOVE_CLASS);
         this.removeButton.mount(this.element);
     }
 
-    // The plain object that gets serialized into localStorage
-    getData() {
-        return { id: this.id, text: this.textarea.value };
-    }
-
-    // Runs handler on every keystroke, which is what saves instead of a timer
+    // Copies the typing into the model first, then tells the page to save. One
+    // listener does both, so the two can never happen out of order.
     onInput(handler) {
-        this.textarea.addEventListener("input", handler);
+        this.textarea.addEventListener("input", () => {
+            this.data.text = this.textarea.value;
+            handler();
+        });
     }
 
     // Hands this whole Note to the handler so the writer knows which one to drop
     onRemove(handler) {
         this.removeButton.onClick(() => handler(this));
-    }
-
-    mount(parent) {
-        parent.appendChild(this.element);
-        return this;
-    }
-
-    // Removing the row takes the textarea and its remove button with it
-    remove() {
-        this.element.remove();
     }
 }

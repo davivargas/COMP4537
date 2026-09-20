@@ -3,67 +3,38 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
+import { PageApp } from "./PageApp.js";
 import { Note } from "./Note.js";
+import { NoteData } from "./NoteData.js";
 import { AppButton } from "./AppButton.js";
-import { StatusLabel } from "./StatusLabel.js";
 import { MESSAGES } from "../lang/messages/en/user.js";
 
-// Builds and runs the writer page. Holds the array of Note objects and saves it to
-// storage the moment anything changes, rather than on a timer.
-export class WriterApp {
-    static INDEX_URL = "index.html";
-    static FIRST_ID = 1;
-
+// The writer page. It holds one Note for every stored NoteData and writes the whole
+// list back to storage the moment anything changes, rather than on a timer.
+export class WriterApp extends PageApp {
     constructor(root, store) {
-        this.root = root;
-        this.store = store;
-        this.notes = [];
-        this.nextId = WriterApp.FIRST_ID;
-        this.status = new StatusLabel();
-        this.noteList = document.createElement("div");
-        this.noteList.className = "note-list";
+        super(root, store, MESSAGES.WRITER_TITLE);
     }
 
-    start() {
-        document.title = MESSAGES.WRITER_TITLE;
-        this.status.mount(this.root);
-
-        const heading = document.createElement("h1");
-        heading.textContent = MESSAGES.WRITER_TITLE;
-        this.root.appendChild(heading);
-
-        this.root.appendChild(this.noteList);
-
+    buildContent() {
         // The add button sits after the list, so every new note pushes it further down
-        const addButton = new AppButton(MESSAGES.ADD_BUTTON, "add-button");
-        addButton.onClick(() => this.addNote());
-        addButton.mount(this.root);
+        new AppButton(MESSAGES.ADD_BUTTON, "add-button")
+            .onClick(() => this.addNote())
+            .mount(this.root);
 
-        const backRow = document.createElement("div");
-        backRow.className = "back-row";
-        this.root.appendChild(backRow);
-
-        const backButton = new AppButton(MESSAGES.BACK_BUTTON, "back-button");
-        backButton.onClick(() => {
-            window.location.href = WriterApp.INDEX_URL;
-        });
-        backButton.mount(backRow);
-
-        this.loadExistingNotes();
-    }
-
-    // Rebuilds a textarea for every note already in storage, so the user can edit them
-    loadExistingNotes() {
-        for (const stored of this.store.load()) {
-            this.createNote(stored.id, stored.text);
-            if (stored.id >= this.nextId) {
-                this.nextId = stored.id + 1;
-            }
+        // A textarea for every note already in storage, so the user can edit them
+        for (const data of this.store.load()) {
+            this.createNote(data);
         }
     }
 
-    createNote(id, text) {
-        const note = new Note(id, text);
+    // The models behind the notes on screen, in the order they appear
+    noteData() {
+        return this.notes.map((note) => note.data);
+    }
+
+    createNote(data) {
+        const note = new Note(data);
         note.onInput(() => this.save());
         note.onRemove((target) => this.removeNote(target));
         note.mount(this.noteList);
@@ -72,12 +43,11 @@ export class WriterApp {
     }
 
     addNote() {
-        this.createNote(this.nextId, "");
-        this.nextId += 1;
+        this.createNote(new NoteData(NoteData.nextId(this.noteData()), ""));
         this.save();
     }
 
-    // Drops the note from the array and the page, then writes the shorter array out
+    // Drops the note from the array and the page, then writes the shorter list out
     // immediately so its contents leave localStorage at once
     removeNote(note) {
         this.notes = this.notes.filter((candidate) => candidate !== note);
@@ -86,7 +56,7 @@ export class WriterApp {
     }
 
     save() {
-        this.store.save(this.notes.map((note) => note.getData()));
+        this.store.save(this.noteData());
         this.status.showNow(MESSAGES.STORED_AT);
     }
 }
