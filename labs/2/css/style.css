@@ -1,0 +1,89 @@
+/*
+ * COMP 4537 - Lab 2: JSON, Object Constructor, localStorage
+ * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
+ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+h1 {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+    /* Keeps the heading clear of the status label in the corner */
+    padding-right: 14rem;
+}
+
+/* The "Stored at ..." / "Updated at ..." line in the top right corner */
+.status {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    font-weight: bold;
+}
+
+.student-name {
+    margin: 0 0 1rem;
+}
+
+.nav-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.note-list {
+    margin-bottom: 0.75rem;
+}
+
+/* One note: its textarea and its own remove button side by side */
+.note-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.note-text {
+    width: 20rem;
+    height: 4rem;
+    padding: 0.3rem;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+/* A note as the reader page shows it: same width, not editable */
+.read-note {
+    width: 20rem;
+    min-height: 4rem;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    border: 1px solid #999;
+    background-color: #fff;
+    /* Keeps the line breaks the writer typed */
+    white-space: pre-wrap;
+}
+
+.empty-message {
+    margin: 0;
+    color: #666;
+}
+
+button {
+    padding: 0.3rem 1.2rem;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.back-row {
+    margin-top: 2rem;
+}
