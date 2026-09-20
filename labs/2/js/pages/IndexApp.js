@@ -3,8 +3,8 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
-import { AppButton } from "./AppButton.js";
-import { MESSAGES } from "../lang/messages/en/user.js";
+import { AppButton } from "../widgets/AppButton.js";
+import { MESSAGES } from "../../lang/messages/en/user.js";
 
 // The front page: the title, the student name and the two buttons that lead to the
 // writer and the reader. It has no notes and no store of its own, so it does not

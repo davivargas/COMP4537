@@ -4,8 +4,8 @@
  */
 
 import { PageApp } from "./PageApp.js";
-import { ReadOnlyNote } from "./ReadOnlyNote.js";
-import { MESSAGES } from "../lang/messages/en/user.js";
+import { ReadOnlyNote } from "../widgets/ReadOnlyNote.js";
+import { MESSAGES } from "../../lang/messages/en/user.js";
 
 // The reader page. It reads once when the page opens and again every time another
 // tab changes the stored notes, so it stays current without a refresh.

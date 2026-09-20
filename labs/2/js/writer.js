@@ -3,8 +3,8 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
-import { WriterApp } from "./WriterApp.js";
-import { NoteStore } from "./NoteStore.js";
+import { WriterApp } from "./pages/WriterApp.js";
+import { NoteStore } from "./data/NoteStore.js";
 
 // Starting point for writer.html
 new WriterApp(document.body, new NoteStore()).start();

@@ -3,7 +3,7 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
-import { IndexApp } from "./IndexApp.js";
+import { IndexApp } from "./pages/IndexApp.js";
 
 // Starting point for index.html
 new IndexApp(document.body).start();

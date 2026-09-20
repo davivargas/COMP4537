@@ -4,10 +4,10 @@
  */
 
 import { PageApp } from "./PageApp.js";
-import { Note } from "./Note.js";
-import { NoteData } from "./NoteData.js";
-import { AppButton } from "./AppButton.js";
-import { MESSAGES } from "../lang/messages/en/user.js";
+import { Note } from "../widgets/Note.js";
+import { NoteData } from "../data/NoteData.js";
+import { AppButton } from "../widgets/AppButton.js";
+import { MESSAGES } from "../../lang/messages/en/user.js";
 
 // The writer page. It holds one Note for every stored NoteData and writes the whole
 // list back to storage the moment anything changes, rather than on a timer.

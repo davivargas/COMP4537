@@ -3,9 +3,9 @@
  * AI disclosure: this file was written with the help of Claude (Anthropic), an AI assistant.
  */
 
-import { AppButton } from "./AppButton.js";
-import { StatusLabel } from "./StatusLabel.js";
-import { MESSAGES } from "../lang/messages/en/user.js";
+import { AppButton } from "../widgets/AppButton.js";
+import { StatusLabel } from "../widgets/StatusLabel.js";
+import { MESSAGES } from "../../lang/messages/en/user.js";
 
 // What the writer page and the reader page have in common: the title, the status
 // line, the heading, the list the notes go in and the button back to the index.

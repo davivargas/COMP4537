@@ -5,7 +5,7 @@
 
 import { Widget } from "./Widget.js";
 import { AppButton } from "./AppButton.js";
-import { MESSAGES } from "../lang/messages/en/user.js";
+import { MESSAGES } from "../../lang/messages/en/user.js";
 
 // The editable view of one NoteData: a textarea to change its text and a button to
 // remove it. The NoteData behind it is kept up to date on every keystroke, so the

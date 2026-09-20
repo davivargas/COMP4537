@@ -17,17 +17,17 @@ breakdown.
 - **File by file**
   - [The three HTML pages](#the-three-html-pages)
   - [lang/messages/en/user.js](#langmessagesenuserjs)
-  - [js/Widget.js](#jswidgetjs)
-  - [js/AppButton.js](#jsappbuttonjs)
-  - [js/NoteData.js](#jsnotedatajs)
-  - [js/NoteStore.js](#jsnotestorejs)
-  - [js/Note.js](#jsnotejs)
-  - [js/ReadOnlyNote.js](#jsreadonlynotejs)
-  - [js/StatusLabel.js](#jsstatuslabeljs)
-  - [js/PageApp.js](#jspageappjs)
-  - [js/WriterApp.js](#jswriterappjs)
-  - [js/ReaderApp.js](#jsreaderappjs)
-  - [js/IndexApp.js](#jsindexappjs)
+  - [js/widgets/Widget.js](#jswidgetswidgetjs)
+  - [js/widgets/AppButton.js](#jswidgetsappbuttonjs)
+  - [js/data/NoteData.js](#jsdatanotedatajs)
+  - [js/data/NoteStore.js](#jsdatanotestorejs)
+  - [js/widgets/Note.js](#jswidgetsnotejs)
+  - [js/widgets/ReadOnlyNote.js](#jswidgetsreadonlynotejs)
+  - [js/widgets/StatusLabel.js](#jswidgetsstatuslabeljs)
+  - [js/pages/PageApp.js](#jspagespageappjs)
+  - [js/pages/WriterApp.js](#jspageswriterappjs)
+  - [js/pages/ReaderApp.js](#jspagesreaderappjs)
+  - [js/pages/IndexApp.js](#jspagesindexappjs)
   - [js/index.js, js/writer.js, js/reader.js](#jsindexjs-jswriterjs-jsreaderjs)
   - [css/style.css](#cssstylecss)
 - [Class responsibilities at a glance](#class-responsibilities-at-a-glance)
@@ -55,6 +55,35 @@ refresh button and no polling timer. The corner reads `"Updated at 2:31:07 PM"`.
 ---
 
 ## How the files fit together
+
+The files are grouped by what they are responsible for. The three entry points stay at
+the top of `js/`, because they are the files the HTML names directly:
+
+```
+2/js/
+|-- index.js          the three entry points, one line each
+|-- writer.js
+|-- reader.js
+|-- data/             what gets stored
+|   |-- NoteData.js
+|   `-- NoteStore.js
+|-- pages/            what builds a page
+|   |-- PageApp.js
+|   |-- IndexApp.js
+|   |-- WriterApp.js
+|   `-- ReaderApp.js
+`-- widgets/          what draws on screen
+    |-- Widget.js
+    |-- AppButton.js
+    |-- Note.js
+    |-- ReadOnlyNote.js
+    `-- StatusLabel.js
+```
+
+Each base class sits in the folder with the classes that extend it - `Widget.js` in
+`widgets/`, `PageApp.js` in `pages/` - because a base class is not a different kind of
+thing from its subclasses. A useful check on the grouping: every import inside a folder
+is still a plain `./` path, and only imports that genuinely cross a boundary need `../`.
 
 Two inheritance trees, plus one model class that belongs to neither:
 
@@ -241,7 +270,7 @@ Two details worth pointing at:
 
 ---
 
-## `js/Widget.js`
+## `js/widgets/Widget.js`
 
 **Responsibility:** the base class for everything that owns one element on the page.
 
@@ -305,7 +334,7 @@ inheritance is worth more.
 
 ---
 
-## `js/AppButton.js`
+## `js/widgets/AppButton.js`
 
 **Responsibility:** wrap a `<button>` element so no page ever builds one by hand. Every
 button in the lab is an `AppButton` — the two nav buttons, Add, every Remove, and both
@@ -358,7 +387,7 @@ That form is used for the Back button, the Add button and both nav buttons.
 
 ---
 
-## `js/NoteData.js`
+## `js/data/NoteData.js`
 
 **Responsibility:** one note *as data* — the part that actually gets stored. No element,
 no DOM, no page.
@@ -466,7 +495,7 @@ down in this one method, so adding a field to the class later cannot silently ch
 what gets written to storage.
 ---
 
-## `js/NoteStore.js`
+## `js/data/NoteStore.js`
 
 **Responsibility:** the *only* class in the app that touches `localStorage`. It converts
 `NoteData` objects into a JSON string going in, and back into `NoteData` objects coming
@@ -610,7 +639,7 @@ in the writer, watch the reader.
 
 ---
 
-## `js/Note.js`
+## `js/widgets/Note.js`
 
 **Responsibility:** the editable *view* of one `NoteData` — a textarea showing its text
 and a button to remove it.
@@ -733,7 +762,7 @@ The arrow function does two jobs:
 
 ---
 
-## `js/ReadOnlyNote.js`
+## `js/widgets/ReadOnlyNote.js`
 
 **Responsibility:** one note as the reader page displays it — the text only, with nothing
 to edit and nothing to remove.
@@ -769,7 +798,7 @@ which class it is holding, and it is why this class can no longer drift out of s
 
 ---
 
-## `js/StatusLabel.js`
+## `js/widgets/StatusLabel.js`
 
 **Responsibility:** the small bold line pinned in the top-right corner, reporting the
 most recent time the notes were stored (writer) or retrieved (reader).
@@ -813,7 +842,7 @@ not from where it sits in the DOM.
 
 ---
 
-## `js/PageApp.js`
+## `js/pages/PageApp.js`
 
 **Responsibility:** everything the writer page and the reader page have in common.
 
@@ -919,7 +948,7 @@ simply be a heading and a Back button.
 
 ---
 
-## `js/WriterApp.js`
+## `js/pages/WriterApp.js`
 
 **Responsibility:** the writer page. It holds one `Note` widget per stored `NoteData` and
 writes the whole set to storage the moment anything changes.
@@ -1088,7 +1117,7 @@ notes that is simpler and completely correct.
 
 ---
 
-## `js/ReaderApp.js`
+## `js/pages/ReaderApp.js`
 
 **Responsibility:** the reader page. Display the stored notes and keep them current
 without a page reload.
@@ -1198,7 +1227,7 @@ change.
 
 ---
 
-## `js/IndexApp.js`
+## `js/pages/IndexApp.js`
 
 **Responsibility:** the front page — the title, the student name, and the two buttons that
 lead to the writer and the reader.
