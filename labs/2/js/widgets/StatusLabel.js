@@ -14,8 +14,14 @@ export class StatusLabel extends Widget {
         super("div", StatusLabel.CLASS_NAME);
     }
 
-    // Stamps the current time after the given message, e.g. "Stored at 2:31:07 PM"
+    // Stamps the given time after the message, e.g. "Stored at 2:31:07 PM". The
+    // time is passed in so the writer can report a save that happened before the
+    // page was even opened.
+    show(message, time) {
+        this.element.textContent = message + time.toLocaleTimeString();
+    }
+
     showNow(message) {
-        this.element.textContent = message + new Date().toLocaleTimeString();
+        this.show(message, new Date());
     }
 }

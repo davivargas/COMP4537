@@ -10,10 +10,14 @@ import { NoteData } from "./NoteData.js";
 // the reader page can never disagree about the stored format.
 export class NoteStore {
     static KEY = "comp4537_lab2_notes";
+    static SAVED_AT_KEY = "comp4537_lab2_notes_saved_at";
 
-    // Takes NoteData objects; JSON.stringify calls toJSON() on each one of them
+    // Takes NoteData objects; JSON.stringify calls toJSON() on each one of them.
+    // The moment of the save is stored next to them so the writer page can still
+    // report it after the page is closed and opened again.
     save(notes) {
         localStorage.setItem(NoteStore.KEY, JSON.stringify(notes));
+        localStorage.setItem(NoteStore.SAVED_AT_KEY, new Date().toISOString());
     }
 
     // Always returns an array of NoteData, even if nothing has been stored yet or
@@ -35,6 +39,17 @@ export class NoteStore {
         return parsed
             .map((item) => NoteData.fromJSON(item))
             .filter((note) => note !== null);
+    }
+
+    // When save() last ran, or null if nothing has been stored yet or the stamp
+    // that is there is not a date we can read back
+    savedAt() {
+        const raw = localStorage.getItem(NoteStore.SAVED_AT_KEY);
+        if (raw === null) {
+            return null;
+        }
+        const time = new Date(raw);
+        return Number.isNaN(time.getTime()) ? null : time;
     }
 
     // The storage event fires in every OTHER tab of this browser when our key changes.

@@ -26,6 +26,10 @@ export class WriterApp extends PageApp {
         for (const data of this.store.load()) {
             this.createNote(data);
         }
+
+        // Opening the page is not a save, so the line reports the save that the
+        // last visit ended on instead of the time right now
+        this.showSaveTime();
     }
 
     // The models behind the notes on screen, in the order they appear
@@ -57,6 +61,15 @@ export class WriterApp extends PageApp {
 
     save() {
         this.store.save(this.noteData());
-        this.status.showNow(MESSAGES.STORED_AT);
+        this.showSaveTime();
+    }
+
+    // Leaves the line blank until there is a save to report, so a first visit does
+    // not claim notes were stored when none ever were
+    showSaveTime() {
+        const savedAt = this.store.savedAt();
+        if (savedAt !== null) {
+            this.status.show(MESSAGES.STORED_AT, savedAt);
+        }
     }
 }
