@@ -21,6 +21,7 @@ export class ReaderApp extends PageApp {
     buildContent() {
         this.refresh();
         this.store.onExternalChange(() => this.refresh());
+        // setInterval(() => this.refresh(), 1000 * 2); // refresh every 2 seconds
     }
 
     // Throws away the notes on screen and rebuilds them from what is in storage now
