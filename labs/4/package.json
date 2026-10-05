@@ -1,0 +1,12 @@
+{
+  "name": "comp4537-lab4",
+  "version": "1.0.0",
+  "description": "COMP 4537 Lab 4: node http server (getDate, writeFile, readFile)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
