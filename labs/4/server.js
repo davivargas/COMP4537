@@ -61,7 +61,17 @@ class LabServer {
 
     // Part C.1: append the text to file.txt, creating the file if needed
     writeFile(url, res) {
-        const text = url.searchParams.get("text");
+        // Read the raw value so "+" stays a plus sign (searchParams would turn it into a space)
+        // and a "%" not followed by two hex digits (e.g. "100%") stays a literal percent sign
+        const match = url.search.match(/[?&]text=([^&]*)/);
+        const raw = match ? match[1].replace(/%(?![0-9A-Fa-f]{2})/g, "%25") : "";
+        let text;
+        try {
+            text = decodeURIComponent(raw);
+        } catch {
+            // Bytes that are not valid UTF-8 (e.g. "%FF") are kept as typed
+            text = raw;
+        }
         if (!text) {
             this.send(res, 400, LabServer.TEXT, MESSAGES.MISSING_TEXT);
             return;
