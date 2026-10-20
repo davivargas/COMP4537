@@ -62,6 +62,8 @@ class Database {
     }
 
     async runQuery(sql) {
+        await this.createTable();
+
         const [rows] = await this.reader.query(sql);
         return rows;
     }
